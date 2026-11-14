@@ -139,7 +139,7 @@ class MainActivity : ComponentActivity() {
             Triple("Write", Icons.Filled.Edit, Mode.WRITE),
             Triple("Erase", Icons.Filled.Delete, Mode.ERASE),
             Triple("Lock", Icons.Filled.Lock, Mode.LOCK),
-            Triple("Emulate", Icons.Filled.Contactless, Mode.EMULATE),
+            Triple("Emulate", Icons.Filled.Share, Mode.EMULATE),
         )
 
         MaterialTheme(colorScheme = darkColorScheme()) {
@@ -313,7 +313,7 @@ class MainActivity : ComponentActivity() {
             }
             Spacer(Modifier.width(8.dp))
             OutlinedButton(onClick = { setMode(Mode.UNLOCK) }, enabled = pwd.isNotBlank()) {
-                Icon(Icons.Filled.LockOpen, null); Spacer(Modifier.width(6.dp)); Text("Arm unlock")
+                Icon(Icons.Filled.Refresh, null); Spacer(Modifier.width(6.dp)); Text("Arm unlock")
             }
         }
 
@@ -338,7 +338,7 @@ class MainActivity : ComponentActivity() {
             enabled = confirm,
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
         ) {
-            Icon(Icons.Filled.NoEncryption, null); Spacer(Modifier.width(6.dp)); Text("Arm permanent lock")
+            Icon(Icons.Filled.Warning, null); Spacer(Modifier.width(6.dp)); Text("Arm permanent lock")
         }
     }
 
@@ -373,7 +373,7 @@ class MainActivity : ComponentActivity() {
             HcePayloadStore.setMessage(ctx, msg)
             statusLine.value = "Payload set. Emulating — hold a reader to this phone."
         }) {
-            Icon(Icons.Filled.Contactless, null); Spacer(Modifier.width(6.dp)); Text("Set payload & emulate")
+            Icon(Icons.Filled.Share, null); Spacer(Modifier.width(6.dp)); Text("Set payload & emulate")
         }
         Spacer(Modifier.height(8.dp))
         Text(
