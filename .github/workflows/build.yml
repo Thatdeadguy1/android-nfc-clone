@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:   # lets you trigger a build manually from the Actions tab
 
+permissions:
+  contents: write      # allows publishing the APK as a Release asset
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,9 +33,22 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Upload APK
+      - name: Upload APK (Actions artifact)
         uses: actions/upload-artifact@v4
         with:
           name: nfc-tool-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish APK as a Release asset (predictable download URL)
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete apk-latest --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
+          gh release create apk-latest \
+            app/build/outputs/apk/debug/app-debug.apk \
+            --repo "$GITHUB_REPOSITORY" \
+            --target main \
+            --title "NFC Tool (latest debug build)" \
+            --notes "Sideload app-debug.apk onto the Galaxy S8."
