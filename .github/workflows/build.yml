@@ -19,9 +19,16 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'   # avoid the deprecated 'tools' package that breaks setup
+
+      - name: Install required SDK packages
+        run: |
+          yes | sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
+          yes | sdkmanager --licenses || true
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
