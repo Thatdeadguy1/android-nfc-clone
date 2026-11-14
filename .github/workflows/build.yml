@@ -40,15 +40,15 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      - name: Publish APK as a Release asset (predictable download URL)
+      - name: Publish APK as a Release asset (unique tag per build)
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete apk-latest --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
-          gh release create apk-latest \
+          TAG="apk-${{ github.run_number }}"
+          gh release create "$TAG" \
             app/build/outputs/apk/debug/app-debug.apk \
             --repo "$GITHUB_REPOSITORY" \
-            --target main \
-            --title "NFC Tool (latest debug build)" \
+            --target "$GITHUB_SHA" \
+            --title "NFC Tool build ${{ github.run_number }}" \
             --notes "Sideload app-debug.apk onto the Galaxy S8."
